@@ -1,5 +1,5 @@
 /* ============================================
-   BRAND TWO BRAND - DESIGN SYSTEM
+   SKPLORE - DESIGN SYSTEM
    ============================================ */
 
 /* Google Fonts */
@@ -75,7 +75,6 @@
   --z-overlay: 300;
   --z-modal: 400;
   --z-toast: 500;
-  --z-intro: 1000;
 }
 
 /* ============================================
@@ -843,11 +842,24 @@ h5, h6 {
   margin-top: var(--space-2xl);
 }
 
+.atmospheres-grid--two {
+  grid-template-columns: repeat(2, 1fr);
+  max-width: 1200px;
+  margin: var(--space-2xl) auto 0 auto;
+}
+
+.atmospheres-grid--two .atmosphere-card {
+  aspect-ratio: 16/11;
+  border-radius: 12px;
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.2);
+}
+
 .atmosphere-card {
   position: relative;
   aspect-ratio: 3/4;
   overflow: hidden;
   cursor: pointer;
+  border-radius: 8px;
 }
 
 .atmosphere-card-bg {
@@ -865,12 +877,12 @@ h5, h6 {
 .atmosphere-card-overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, transparent 40%, rgba(13,13,13,0.85) 100%);
+  background: linear-gradient(180deg, rgba(0,0,0,0.1) 0%, rgba(13,13,13,0.4) 40%, rgba(13,13,13,0.92) 100%);
   transition: background var(--transition-normal);
 }
 
 .atmosphere-card:hover .atmosphere-card-overlay {
-  background: linear-gradient(180deg, transparent 20%, rgba(196,18,48,0.7) 100%);
+  background: linear-gradient(180deg, rgba(0,0,0,0.05) 0%, rgba(196,18,48,0.3) 50%, rgba(13,13,13,0.95) 100%);
 }
 
 .atmosphere-card-content {
@@ -883,10 +895,22 @@ h5, h6 {
   /* Always visible at bottom — no transform offset */
   transform: translateY(0);
   transition: transform var(--transition-normal);
+  z-index: 2;
 }
 
 .atmosphere-card:hover .atmosphere-card-content {
   transform: translateY(0);
+}
+
+.atmosphere-card-badge {
+  display: inline-block;
+  font-family: var(--font-body);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--color-gold);
+  margin-bottom: var(--space-xs);
 }
 
 .atmosphere-card-label {
@@ -900,45 +924,99 @@ h5, h6 {
 
 .atmosphere-card-title {
   font-family: var(--font-heading);
-  font-size: 2rem;
-  letter-spacing: 0.1em;
-  margin-bottom: var(--space-sm);
+  font-size: 2.2rem;
+  letter-spacing: 0.08em;
+  margin-bottom: 6px;
+  color: #ffffff;
+  text-shadow: 0 2px 10px rgba(0,0,0,0.5);
 }
 
 .atmosphere-card-desc {
-  font-size: 0.85rem;
-  color: var(--color-gray-200);
-  opacity: 0;
-  transition: opacity var(--transition-normal);
+  font-size: 0.88rem;
+  color: rgba(255, 255, 255, 0.8);
+  margin-bottom: 8px;
+  line-height: 1.4;
+  transition: color var(--transition-normal);
 }
 
-.atmosphere-card:hover .atmosphere-card-desc {
-  opacity: 1;
+.atmosphere-card-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.75rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: var(--color-crimson);
+  transition: transform 0.3s ease, color 0.3s ease;
+}
+
+.atmosphere-card:hover .atmosphere-card-link {
+  transform: translateX(6px);
+  color: #fff;
 }
 
 @media (max-width: 768px) {
   .atmospheres-grid {
-    grid-template-columns: repeat(3, 1fr);
-    gap: var(--space-sm);
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
   }
+  .atmospheres-grid--two {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+  .atmospheres-grid--two .atmosphere-card,
   .atmosphere-card {
-    aspect-ratio: 2/3;
-  }
-  .atmosphere-card-title {
-    font-size: 1rem;
-  }
-  .atmosphere-card-label {
-    font-size: 0.55rem;
-    letter-spacing: 0.15em;
+    aspect-ratio: 3/4;
+    border-radius: 10px;
   }
   .atmosphere-card-content {
-    padding: var(--space-sm);
+    padding: 14px 10px;
+  }
+  .atmosphere-card-badge,
+  .atmosphere-card-label {
+    font-size: 0.58rem;
+    letter-spacing: 0.12em;
+    margin-bottom: 2px;
+  }
+  .atmosphere-card-title {
+    font-size: 1.2rem;
+    letter-spacing: 0.04em;
+    margin-bottom: 4px;
+    line-height: 1.15;
+  }
+  .atmosphere-card-desc {
+    display: none;
+  }
+  .atmosphere-card-link {
+    font-size: 0.65rem;
+    letter-spacing: 0.12em;
   }
 }
 
-@media (max-width: 380px) {
+@media (max-width: 420px) {
+  .atmospheres-grid--two {
+    gap: 8px;
+  }
+  .atmospheres-grid--two .atmosphere-card,
+  .atmosphere-card {
+    aspect-ratio: 3/4;
+    border-radius: 8px;
+  }
+  .atmosphere-card-content {
+    padding: 10px 8px;
+  }
   .atmosphere-card-title {
-    font-size: 0.8rem;
+    font-size: 1.02rem;
+  }
+  .atmosphere-card-badge,
+  .atmosphere-card-label {
+    font-size: 0.5rem;
+    letter-spacing: 0.08em;
+  }
+  .atmosphere-card-link {
+    font-size: 0.58rem;
+    letter-spacing: 0.08em;
   }
 }
 
@@ -1491,6 +1569,47 @@ h5, h6 {
   background: rgba(196, 18, 48, 0.05);
 }
 
+.subcategory-pills {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+  margin-top: 16px;
+  margin-bottom: var(--space-2xl);
+  padding: 4px 0;
+}
+
+.subcategory-pill {
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  font-weight: 500;
+  letter-spacing: 0.03em;
+  padding: 8px 20px;
+  border-radius: 30px;
+  border: 1px solid #d1d5db;
+  background: #f3f4f6;
+  color: #1f2937;
+  cursor: pointer;
+  transition: all var(--transition-normal);
+  text-transform: capitalize;
+  display: inline-flex;
+  align-items: center;
+}
+
+.subcategory-pill:hover {
+  border-color: #9ca3af;
+  background: #e5e7eb;
+  color: #111827;
+}
+
+.subcategory-pill.active {
+  border-color: var(--color-crimson);
+  background: var(--color-crimson);
+  color: #ffffff !important;
+  font-weight: 600;
+  box-shadow: 0 4px 12px rgba(196, 18, 48, 0.25);
+}
+
 /* ============================================
    Mobile Responsive Refinements
    ============================================ */
@@ -1941,6 +2060,108 @@ h5, h6 {
   color: var(--color-crimson);
 }
 
+/* ── Empty Cart State ── */
+.cart-drawer-empty {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 28px;
+  text-align: center;
+  animation: fadeInEmpty 0.35s ease-out;
+}
+
+@keyframes fadeInEmpty {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.cart-drawer-empty-icon-wrap {
+  width: 84px;
+  height: 84px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+  border: 1.5px dashed #cbd5e1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #475569;
+  margin-bottom: 22px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s ease, color 0.3s ease;
+}
+
+.cart-drawer-empty:hover .cart-drawer-empty-icon-wrap {
+  transform: translateY(-2px) scale(1.04);
+  border-color: #0f172a;
+  color: #0f172a;
+}
+
+.cart-empty-title {
+  font-family: var(--font-heading), Georgia, serif;
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: #0f172a;
+  letter-spacing: -0.01em;
+  margin: 0 0 10px 0;
+}
+
+.cart-empty-subtitle,
+.cart-drawer-empty > p {
+  font-family: var(--font-body), -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-size: 0.9rem;
+  color: #64748b;
+  max-width: 280px;
+  line-height: 1.55;
+  margin: 0 0 28px 0;
+}
+
+.cart-empty-shop-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 14px 28px;
+  background: #0f172a;
+  color: #ffffff;
+  font-family: var(--font-body), -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  border-radius: 6px;
+  border: 1.5px solid #0f172a;
+  cursor: pointer;
+  box-shadow: 0 4px 16px rgba(15, 23, 42, 0.14);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.cart-empty-shop-btn:hover {
+  background: #1e293b;
+  border-color: #1e293b;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.22);
+}
+
+.cart-empty-shop-btn:active {
+  transform: translateY(0);
+}
+
+.cart-empty-shop-btn svg {
+  transition: transform 0.2s ease;
+}
+
+.cart-empty-shop-btn:hover svg {
+  transform: translateX(4px);
+}
+
 .cart-drawer-items {
   flex: 1;
   overflow-y: auto;
@@ -1970,13 +2191,42 @@ h5, h6 {
 
 .cart-item-details {
   flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
 }
 
 .cart-item-name {
   font-family: var(--font-subheading);
   font-size: 0.9rem;
   font-weight: 600;
-  margin-bottom: 4px;
+  line-height: 1.3;
+  display: block;
+  width: 100%;
+  white-space: normal;
+  word-break: break-word;
+  margin-bottom: 2px;
+}
+
+.cart-item-code {
+  display: block;
+  font-family: var(--font-body), -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-size: 0.72rem;
+  font-weight: 500;
+  color: var(--color-gray-400);
+  letter-spacing: 0.04em;
+  line-height: 1.4;
+}
+
+.cart-item-meta {
+  display: block;
+  font-family: var(--font-body), -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-size: 0.72rem;
+  font-weight: 500;
+  color: var(--color-gray-400);
+  letter-spacing: 0.02em;
+  line-height: 1.4;
 }
 
 .cart-item-price {
@@ -2210,6 +2460,213 @@ h5, h6 {
 
 .cart-whatsapp-btn:active {
   transform: translateY(0);
+}
+
+.cart-whatsapp-btn.disabled,
+.cart-whatsapp-btn:disabled {
+  background: #9ca3af !important;
+  color: #f3f4f6 !important;
+  cursor: not-allowed !important;
+  transform: none !important;
+  box-shadow: none !important;
+  filter: none !important;
+  opacity: 0.72;
+}
+
+/* ── Cart Customer Delivery Form ── */
+.cart-customer-section {
+  margin: 16px var(--space-lg) 20px;
+  padding: 18px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.04);
+}
+
+.cart-customer-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #edf2f7;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.cart-customer-header-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.cart-customer-icon {
+  font-size: 1.1rem;
+  line-height: 1;
+}
+
+.cart-customer-title {
+  font-family: var(--font-body), -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: #0f172a;
+  text-transform: uppercase;
+}
+
+.cart-customer-badge {
+  font-family: var(--font-body), -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  padding: 4px 10px;
+  border-radius: 20px;
+  background: rgba(220, 38, 38, 0.08);
+  color: #dc2626;
+  transition: all var(--transition-fast);
+}
+
+.cart-customer-badge.complete {
+  background: rgba(22, 163, 74, 0.12);
+  color: #15803d;
+  border: 1px solid rgba(22, 163, 74, 0.3);
+  font-weight: 600;
+}
+
+.cart-customer-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.cart-slot {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.cart-slot-label-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+}
+
+.cart-slot-label {
+  font-family: var(--font-body), -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-size: 0.85rem;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  color: #334155;
+  cursor: pointer;
+}
+
+.cart-slot-check {
+  font-size: 0.82rem;
+  color: #16a34a;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.cart-slots-split {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: 12px;
+}
+
+/* White background input box with crisp black border for Phone */
+.cart-phone-input-wrap {
+  display: flex;
+  align-items: center;
+  position: relative;
+  width: 100%;
+  background: #ffffff;
+  border: 1.5px solid #000000;
+  border-radius: 6px;
+  overflow: hidden;
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.cart-phone-prefix {
+  padding: 0 12px;
+  font-family: var(--font-body), -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: #0f172a;
+  background: #f8fafc;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-right: 1.5px solid #000000;
+  flex-shrink: 0;
+  user-select: none;
+  min-height: 44px;
+}
+
+.cart-field-phone {
+  background: transparent !important;
+  border: none !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  padding: 11px 12px !important;
+  color: #0f172a !important;
+  font-size: 0.92rem !important;
+  font-family: var(--font-body), -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+  caret-color: #000000 !important;
+}
+
+.cart-phone-input-wrap:focus-within {
+  border-color: #000000;
+  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.12);
+}
+
+/* White background input boxes with crisp black border for Full Name, PIN code, and Address */
+.cart-field-input,
+.cart-field-textarea {
+  width: 100%;
+  padding: 11px 14px;
+  font-size: 0.92rem;
+  font-family: var(--font-body), -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  color: #0f172a;
+  background: #ffffff;
+  border: 1.5px solid #000000;
+  border-radius: 6px;
+  outline: none;
+  caret-color: #000000;
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.cart-field-input::placeholder,
+.cart-field-textarea::placeholder,
+.cart-field-phone::placeholder {
+  color: #94a3b8;
+}
+
+.cart-field-input:focus,
+.cart-field-textarea:focus {
+  border-color: #000000;
+  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.12);
+}
+
+.cart-field-textarea {
+  resize: vertical;
+  min-height: 64px;
+  line-height: 1.5;
+}
+
+.cart-validation-hint {
+  font-family: var(--font-body), -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-size: 0.78rem;
+  color: #b91c1c;
+  background: rgba(239, 68, 68, 0.08);
+  border: 1px solid rgba(239, 68, 68, 0.25);
+  padding: 10px 14px;
+  border-radius: 6px;
+  margin-bottom: 12px;
+  line-height: 1.45;
+  text-align: center;
+  font-weight: 500;
 }
 
 /* ============================================
@@ -2881,52 +3338,6 @@ h5, h6 {
   #add-to-cart-btn {
     font-size: 0.9rem;
     padding: 14px;
-  }
-}
-
-/* ============================================
-   Vizag Intro Overlay
-   ============================================ */
-.vizag-intro {
-  position: fixed;
-  inset: 0;
-  z-index: var(--z-intro);
-  background: var(--color-deep-black);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-}
-
-.vizag-scene {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.vizag-landmark {
-  position: absolute;
-  opacity: 0;
-}
-
-.vizag-logo-reveal {
-  position: absolute;
-  opacity: 0;
-  text-align: center;
-}
-
-.vizag-logo-reveal .header-logo {
-  font-size: 3rem;
-  justify-content: center;
-}
-
-/* ── Intro mobile fix: prevent logo cropping ── */
-@media (max-width: 480px) {
-  #intro-stage {
-    padding: 0 12px;
   }
 }
 

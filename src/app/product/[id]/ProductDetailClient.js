@@ -211,6 +211,25 @@ export default function ProductDetailClient({ product, relatedProducts }) {
   const [loadedImages, setLoadedImages] = useState(new Set());
   const touchStartX = useRef(null);
 
+  const isGadget = product.category === 'gadgets';
+  const minQty = Math.max(1, parseInt(product.minOrderQuantity, 10) || 1);
+  const maxOrderQty = product.maxOrderQuantity ? parseInt(product.maxOrderQuantity, 10) : null;
+  const stockQty = (product.stockQuantity !== null && product.stockQuantity !== undefined && product.stockQuantity !== '')
+    ? parseInt(product.stockQuantity, 10)
+    : null;
+
+  let upperLimit = null;
+  if (maxOrderQty !== null && stockQty !== null) {
+    upperLimit = Math.min(maxOrderQty, stockQty);
+  } else if (maxOrderQty !== null) {
+    upperLimit = maxOrderQty;
+  } else if (stockQty !== null) {
+    upperLimit = stockQty;
+  }
+
+  // Default quantity starts directly at minOrderQuantity
+  const [quantity, setQuantity] = useState(minQty);
+
   const images = product.images || [];
   const hasImages = images.length > 0;
   const colorImages = product.colorImages || {};
@@ -257,7 +276,8 @@ export default function ProductDetailClient({ product, relatedProducts }) {
     addItem(
       product,
       selectedSize || product.sizes?.[0] || 'One Size',
-      selectedColor || product.colors?.[0] || ''
+      selectedColor || product.colors?.[0] || '',
+      quantity
     );
   };
 
@@ -471,13 +491,125 @@ export default function ProductDetailClient({ product, relatedProducts }) {
                 </div>
               )}
 
+              {/* ── Dynamic Quantity Selector (Enforcing dynamic min order & upper limits) ── */}
+              <div className="product-quantity-wrapper" style={{ margin: '22px 0 26px 0', padding: '16px', background: '#f8fafc', borderRadius: '8px', border: '1px solid #e2e8f0' }}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '12px' }}>
+                  <label style={{
+                    fontFamily: 'var(--font-heading)',
+                    fontSize: '0.8rem',
+                    letterSpacing: '0.12em',
+                    fontWeight: 700,
+                    color: 'var(--color-charcoal)',
+                    textTransform: 'uppercase',
+                  }}>
+                    ORDER QUANTITY
+                  </label>
+                  {minQty > 1 && (
+                    <span style={{
+                      fontSize: '0.72rem',
+                      fontFamily: 'var(--font-body)',
+                      fontWeight: 600,
+                      color: 'var(--color-crimson)',
+                      background: 'rgba(196, 18, 48, 0.08)',
+                      padding: '3px 8px',
+                      borderRadius: '4px',
+                      letterSpacing: '0.04em',
+                    }}>
+                      ⚡ Min Order: {minQty} units
+                    </span>
+                  )}
+                </div>
+
+                <div style={{ display: 'flex', alignItems: 'center', gap: '16px', flexWrap: 'wrap' }}>
+                  <div className="product-qty-control" style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    border: '1px solid #cbd5e1',
+                    borderRadius: '6px',
+                    overflow: 'hidden',
+                    background: '#ffffff',
+                    boxShadow: '0 1px 2px rgba(0,0,0,0.05)',
+                  }}>
+                    <button
+                      type="button"
+                      onClick={() => setQuantity(q => Math.max(minQty, q - 1))}
+                      disabled={quantity <= minQty}
+                      aria-label="Decrease quantity"
+                      style={{
+                        width: '42px',
+                        height: '42px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        background: quantity <= minQty ? '#f1f5f9' : '#ffffff',
+                        border: 'none',
+                        cursor: quantity <= minQty ? 'not-allowed' : 'pointer',
+                        fontSize: '18px',
+                        fontWeight: 600,
+                        color: quantity <= minQty ? '#94a3b8' : '#0f172a',
+                        transition: 'background 0.2s ease',
+                      }}
+                    >
+                      −
+                    </button>
+                    <span style={{
+                      minWidth: '50px',
+                      textAlign: 'center',
+                      fontFamily: 'var(--font-heading)',
+                      fontSize: '1.1rem',
+                      fontWeight: 700,
+                      color: '#0f172a',
+                      userSelect: 'none',
+                    }}>
+                      {quantity}
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => setQuantity(q => (upperLimit !== null ? Math.min(upperLimit, q + 1) : q + 1))}
+                      disabled={upperLimit !== null && quantity >= upperLimit}
+                      aria-label="Increase quantity"
+                      style={{
+                        width: '42px',
+                        height: '42px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        background: (upperLimit !== null && quantity >= upperLimit) ? '#f1f5f9' : '#ffffff',
+                        border: 'none',
+                        cursor: (upperLimit !== null && quantity >= upperLimit) ? 'not-allowed' : 'pointer',
+                        fontSize: '18px',
+                        fontWeight: 600,
+                        color: (upperLimit !== null && quantity >= upperLimit) ? '#94a3b8' : '#0f172a',
+                        transition: 'background 0.2s ease',
+                      }}
+                    >
+                      +
+                    </button>
+                  </div>
+
+                  {/* Range limits and live feedback */}
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '3px' }}>
+                    <div style={{ fontSize: '0.78rem', color: '#334155', fontFamily: 'var(--font-body)', fontWeight: 500 }}>
+                      Allowed range: <strong>{minQty} {upperLimit !== null ? `to ${upperLimit}` : 'or more'} units</strong>
+                    </div>
+                    {stockQty !== null && (
+                      <span style={{ fontSize: '0.74rem', color: stockQty > 0 ? '#16a34a' : '#dc2626', fontFamily: 'var(--font-body)' }}>
+                        {stockQty > 0 ? `✓ ${stockQty} total units available in inventory` : '⚠️ Currently out of stock'}
+                      </span>
+                    )}
+                  </div>
+                </div>
+              </div>
+
               <button className="btn-magnetic" onClick={handleAddToCart}
                 style={{ width: '100%', marginBottom: '12px' }} id="add-to-cart-btn">
-                ADD TO BAG — ₹{product.price.toLocaleString()}
+                ADD TO BAG ({quantity} {quantity === 1 ? 'UNIT' : 'UNITS'}) — ₹{(product.price * quantity).toLocaleString()}
               </button>
 
               <a
-                href={`https://wa.me/918074548419?text=Hi! I'm interested in ${product.name}${product.productCode ? ` [${product.productCode}]` : ''} (₹${product.price.toLocaleString()})${selectedColor ? ` in ${selectedColor}` : ''}${selectedSize ? `, Size ${selectedSize}` : ''}`}
+                href={`https://wa.me/917731962101?text=${encodeURIComponent(
+                  `Hi! I'm interested in ordering ${quantity} units of ${product.name}${product.productCode ? ` [${product.productCode}]` : ''} (Total: ₹${(product.price * quantity).toLocaleString()})${selectedColor ? ` in ${selectedColor}` : ''}${selectedSize ? `, Size ${selectedSize}` : ''}`
+                )}`}
                 target="_blank" rel="noopener noreferrer"
                 className="btn-magnetic btn-magnetic--dark"
                 style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}

@@ -31,20 +31,20 @@ export async function generateMetadata({ params }) {
 
   if (!product) {
     return {
-      title: "Product Not Found | Brand Two Brand's",
+      title: "Product Not Found | Skplore",
       description: 'The product you are looking for does not exist.',
     };
   }
 
-  const title = `${product.name} by ${product.brand} | Brand Two Brand's`;
+  const title = `${product.name} by ${product.brand} | Skplore`;
   const description = product.description
-    || `Shop ${product.name} by ${product.brand} at ₹${product.price.toLocaleString()}. Premium ${product.category} available at Brand Two Brand's, Vizag's finest fashion store.`;
-  const image = product.images?.[0] || '/products/logo/B2blogo.jpg';
+    || `Shop ${product.name} by ${product.brand} at ₹${product.price.toLocaleString()}. Premium ${product.category} available at Skplore, Hyderabad's premier lifestyle destination.`;
+  const image = product.images?.[0] || '/products/logo/skplorelogo.jpg';
 
   return {
     title,
     description,
-    keywords: `${product.name}, ${product.brand}, ${product.category}, Brand Two Brand, Vizag fashion`,
+    keywords: `${product.name}, ${product.brand}, ${product.category}, Skplore, Hyderabad fashion, Hyderabad gadgets`,
     openGraph: {
       title: `${product.name} — ${product.brand}`,
       description,

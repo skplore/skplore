@@ -1,4 +1,4 @@
-# Brand 2 Brand — Storefront (Customer-Facing Website)
+﻿# Skplore — Storefront (Customer-Facing Website)
 
 > **Vizag's premier men's fashion e-commerce store** — built with Next.js 16, React 19, Supabase, and GSAP. A cinematic, premium shopping experience for clothing, footwear, and accessories.
 
@@ -36,7 +36,7 @@
 ├──────────────────────────────┬──────────────────────────────────┤
 │   STOREFRONT (this project)  │   ADMIN PANEL (separate project) │
 │   Port: 3000                 │   Port: 3001                     │
-│   d:\Brand2Brand\            │   d:\Brand2Brand-Admin\          │
+│   d:\Skplore\            │   d:\Skplore-Admin\          │
 │   Customer-facing website    │   Product management dashboard   │
 └──────────────┬───────────────┴──────────────┬──────────────────┘
                │                              │
@@ -82,7 +82,7 @@ Both the storefront and admin panel connect to the **same Supabase project**. Th
 ## Project Structure
 
 ```
-d:\Brand2Brand\
+d:\Skplore\
 ├── .env.local                 # Supabase + Cloudinary keys
 ├── next.config.mjs            # Next.js config (image remote patterns, allowed origins)
 ├── jsconfig.json              # Path aliases (@/ → src/)
@@ -248,7 +248,7 @@ d:\Brand2Brand\
 ### Image Storage (Cloudinary):
 - All product images are stored on **Cloudinary** (25 GB free tier)
 - Images uploaded by admin panel → Cloudinary returns CDN URL → URL stored in `product_images.image_url`
-- URL format: `https://res.cloudinary.com/dbj9ittfl/image/upload/v{version}/brand2brand/products/{product-id}/{filename}`
+- URL format: `https://res.cloudinary.com/dbj9ittfl/image/upload/v{version}/skplore/products/{product-id}/{filename}`
 - Cloudinary auto-transforms: `c_limit,w_{width},q_auto,f_auto` for on-the-fly resizing/format conversion
 - Legacy Supabase Storage URLs (from before migration) are still supported and functional
 
@@ -494,7 +494,7 @@ The homepage is composed of these sections in order:
 - **Brand column**: Logo + tagline
 - **"Visit Our Store" column** with 2-column contact grid:
   - Left: Full address (Shivalayam St, Pedda Waltair JN, Vizag)
-  - Right: Phone (clickable `tel:` link), WhatsApp link, Instagram (`@brand2brands_official`)
+  - Right: Phone (clickable `tel:` link), WhatsApp link, Instagram (`@skplores_official`)
 - Bottom bar: copyright + social icons (Instagram, WhatsApp)
 
 ### WhatsAppWidget (`src/components/WhatsAppWidget.js`)
@@ -597,7 +597,7 @@ CartDrawer renders bill breakdown with per-category savings
 When the customer clicks "Send Order on WhatsApp", a message like this is generated:
 
 ```
-🛏️ *NEW ORDER — Brand 2 Brand*
+🛏️ *NEW ORDER — Skplore*
 
 1. *Floral Beach Shirt*
    Size: L | Colour: Navy | Qty: 2
@@ -678,7 +678,7 @@ Dynamic sitemap generation at `/sitemap.xml`:
 
 - Allows all crawlers on `/`
 - Disallows `/api/` and `/_next/`
-- Points to sitemap at `https://brand2brands.vercel.app/sitemap.xml`
+- Points to sitemap at `https://skplores.vercel.app/sitemap.xml`
 
 ### Vercel Analytics & Speed Insights
 
@@ -754,7 +754,7 @@ CLOUDINARY_API_SECRET=your-api-secret
 
 ### Production URL
 
-**https://brand2brands.vercel.app**
+**https://skplores.vercel.app**
 
 The storefront is deployed on **Vercel** with automatic deployments from the Git repository.
 
@@ -766,7 +766,7 @@ const nextConfig = {
   images: {
     remotePatterns: [
       // Supabase Storage (legacy images)
-      { protocol: 'https', hostname: 'xpmudrchipnbmvlawsuw.supabase.co', pathname: '/storage/v1/object/public/**' },
+      { protocol: 'https', hostname: 'skimedlufkytgemmdhsv.supabase.co', pathname: '/storage/v1/object/public/**' },
       // Cloudinary CDN (all new images)
       { protocol: 'https', hostname: 'res.cloudinary.com', pathname: '/*/image/upload/**' },
     ],
@@ -790,7 +790,7 @@ const nextConfig = {
 ```bash
 # Clone the repository
 git clone <your-repo-url>
-cd Brand2Brand
+cd Skplore
 
 # Install dependencies
 npm install
@@ -816,11 +816,11 @@ npm start
 
 ## Relationship with Admin Panel
 
-This storefront is **read-only** — it only fetches and displays data. All data management (adding products, editing categories, uploading images) is done through the **separate Admin Panel** at `d:\Brand2Brand-Admin\`.
+This storefront is **read-only** — it only fetches and displays data. All data management (adding products, editing categories, uploading images) is done through the **separate Admin Panel** at `d:\Skplore-Admin\`.
 
 | Aspect | Storefront | Admin Panel |
 |--------|-----------|-------------|
-| Location | `d:\Brand2Brand\` | `d:\Brand2Brand-Admin\` |
+| Location | `d:\Skplore\` | `d:\Skplore-Admin\` |
 | Port | 3000 | 3001 |
 | Access | Public (anyone) | Password-protected |
 | Database | Reads only | Reads + Writes |
@@ -903,8 +903,8 @@ Every image URL is transformed at the CDN level for optimal delivery:
 
 **Cloudinary URLs (primary):**
 ```
-Before: https://res.cloudinary.com/dbj9ittfl/image/upload/v123/brand2brand/products/.../cover.jpg
-After:  https://res.cloudinary.com/dbj9ittfl/image/upload/c_limit,w_800,q_auto,f_auto/v123/brand2brand/products/.../cover.jpg
+Before: https://res.cloudinary.com/dbj9ittfl/image/upload/v123/skplore/products/.../cover.jpg
+After:  https://res.cloudinary.com/dbj9ittfl/image/upload/c_limit,w_800,q_auto,f_auto/v123/skplore/products/.../cover.jpg
 ```
 Cloudinary's native transforms deliver auto-quality + auto-format (WebP/AVIF) at zero extra cost.
 
@@ -1078,4 +1078,4 @@ When navigating between pages, instead of a blank screen, users see **6 animated
 
 ## License
 
-Private project — Brand 2 Brand, Visakhapatnam.
+Private project — Skplore, Visakhapatnam.

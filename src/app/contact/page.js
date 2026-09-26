@@ -24,8 +24,8 @@ export default function ContactPage() {
       <section className="category-hero" id="contact-hero">
         <div className="category-hero-bg" style={{ background: '#1A1A1A' }}>
           <Image
-            src="/images/contact_hero.png"
-            alt="Brand2Brand Fashion Store Visakhapatnam — Get In Touch"
+            src="/images/contact_hero_v2.jpg"
+            alt="Skplore Hyderabad — Get In Touch"
             fill
             priority
             sizes="100vw"
@@ -34,7 +34,7 @@ export default function ContactPage() {
         </div>
         <div className="category-hero-content">
           <h1>GET IN TOUCH</h1>
-          <p>Visit us at the heart of Vizag</p>
+          <p>Visit us at the heart of Hyderabad</p>
         </div>
       </section>
 
@@ -150,7 +150,7 @@ export default function ContactPage() {
                 allowFullScreen=""
                 loading="lazy"
                 referrerPolicy="no-referrer-when-downgrade"
-                title="Brand Two Brand Store Location"
+                title="Skplore Store Location"
                 id="store-map"
                 style={{ marginBottom: '32px' }}
               />
@@ -165,14 +165,13 @@ export default function ContactPage() {
                   </svg>
                   <div>
                     <strong style={{ fontFamily: 'var(--font-heading)', letterSpacing: '0.1em', fontSize: '0.9rem' }}>
-                      BRAND TWO BRAND
+                      SKPLORE
                     </strong>
                     <p style={{ fontSize: '0.9rem', color: 'var(--color-gray-400)', lineHeight: 1.8, marginTop: '4px' }}>
-                      Shivalayam Street,<br />
-                      Pedda Waltair JN,<br />
-                      Near Shiva Reddy Bar,<br />
-                      Opposite Down First Left,<br />
-                      Visakhapatnam – 530017
+                      Banjara Hills, Road No. 12,<br />
+                      Near City Center,<br />
+                      Hyderabad – 500034<br />
+                      Telangana
                     </p>
                   </div>
                 </div>
@@ -184,15 +183,15 @@ export default function ContactPage() {
                       <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/>
                     </svg>
                     <div>
-                      <a href="tel:+918074548419" style={{ fontFamily: 'var(--font-heading)', letterSpacing: '0.1em', fontSize: '1.1rem' }}>
-                        8074548419
+                      <a href="tel:+917731962101" style={{ fontFamily: 'var(--font-heading)', letterSpacing: '0.1em', fontSize: '1.1rem' }}>
+                        77319 62101
                       </a>
                       <p style={{ fontSize: '0.75rem', color: 'var(--color-gray-400)' }}>Call &amp; WhatsApp</p>
                     </div>
                   </div>
 
                   <a
-                    href="https://wa.me/918074548419?text=Hi Brand Two Brand! I'd like to visit your store."
+                    href="https://wa.me/917731962101?text=Hi Skplore! I'd like to visit your store."
                     target="_blank"
                     rel="noopener noreferrer"
                     className="btn-magnetic"

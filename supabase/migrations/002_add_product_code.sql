@@ -6,7 +6,7 @@ ALTER TABLE products
   ADD COLUMN IF NOT EXISTS product_code TEXT UNIQUE;
 
 -- 2. Backfill existing products with auto-generated codes
--- Format: B2B-XXXX where XXXX is a zero-padded sequence number
+-- Format: SKP-XXXX where XXXX is a zero-padded sequence number
 DO $$
 DECLARE
   r RECORD;
@@ -22,7 +22,7 @@ BEGIN
     LOOP
       BEGIN
         UPDATE products
-          SET product_code = 'B2B-' || LPAD(seq_num::TEXT, 4, '0')
+          SET product_code = 'SKP-' || LPAD(seq_num::TEXT, 4, '0')
           WHERE id = r.id AND product_code IS NULL;
         seq_num := seq_num + 1;
         EXIT; -- success, move to next product
@@ -49,10 +49,10 @@ BEGIN
   SELECT COALESCE(MAX(CAST(SUBSTR(product_code, 5) AS INT)), 0) + 1
     INTO seq_num
     FROM products
-    WHERE product_code ~ '^B2B-[0-9]+$';
+    WHERE product_code ~ '^SKP-[0-9]+$';
 
   -- Generate and assign the code
-  new_code := 'B2B-' || LPAD(seq_num::TEXT, 4, '0');
+  new_code := 'SKP-' || LPAD(seq_num::TEXT, 4, '0');
   NEW.product_code := new_code;
   RETURN NEW;
 END;

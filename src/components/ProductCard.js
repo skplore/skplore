@@ -76,7 +76,7 @@ export default function ProductCard({ product, hideColorThumbs = false }) {
   // ── Quick add ────────────────────────────────────────────────────────────
   const handleQuickAdd = (e) => {
     e.preventDefault(); e.stopPropagation();
-    addItem(product, product.sizes?.[0] || 'One Size', product.colors?.[0] || '');
+    addItem(product, product.sizes?.[0] || 'One Size', product.colors?.[0] || '', product.minOrderQuantity || 1);
   };
 
   const handleImageError = useCallback((index) => {
@@ -154,6 +154,22 @@ export default function ProductCard({ product, hideColorThumbs = false }) {
         onTouchEnd={handleTouchEnd}
       >
         {product.badge && <span className="product-card-badge">{product.badge}</span>}
+        {product.minOrderQuantity > 1 && (
+          <span
+            className="product-card-badge"
+            style={{
+              left: product.badge ? 'auto' : '10px',
+              right: product.badge ? '10px' : 'auto',
+              background: '#0f172a',
+              color: '#f8fafc',
+              border: '1px solid rgba(255,255,255,0.2)',
+              fontSize: '0.62rem',
+              letterSpacing: '0.08em',
+            }}
+          >
+            MIN ORDER: {product.minOrderQuantity}
+          </span>
+        )}
 
         {/* Stacked image layers */}
         <div className="product-card-image-stack">
@@ -196,7 +212,7 @@ export default function ProductCard({ product, hideColorThumbs = false }) {
 
         {/* Desktop: slide-up Quick Add bar on hover */}
         <button className="product-card-quick-add product-card-quick-add--bar" onClick={handleQuickAdd}>
-          Quick Add
+          {product.minOrderQuantity > 1 ? `Quick Add (${product.minOrderQuantity} pcs)` : 'Quick Add'}
         </button>
 
         {/* Mobile: persistent small cart icon (always visible, bottom-right) */}
@@ -223,6 +239,17 @@ export default function ProductCard({ product, hideColorThumbs = false }) {
             <span className="original-price">₹{product.originalPrice.toLocaleString()}</span>
           )}
         </div>
+        {product.minOrderQuantity > 1 && (
+          <div style={{
+            fontSize: '0.68rem',
+            color: 'var(--color-crimson)',
+            fontFamily: 'var(--font-body)',
+            fontWeight: 600,
+            marginTop: '2px',
+          }}>
+            Min Order: {product.minOrderQuantity} units
+          </div>
+        )}
         {product.productCode && (
           <div className="product-card-code">#{product.productCode}</div>
         )}

@@ -32,11 +32,13 @@ function optimizeImageUrl(url, width = 800) {
   return url;
 }
 
+import { fetchGadgetQuantities, getCachedGadgetQuantities } from '@/lib/gadgetQuantities';
+
 /**
  * Shape a raw product row (with joined subcategories + images) into the
  * flat object shape the existing components expect.
  */
-function shapeProduct(row) {
+function shapeProduct(row, gadgetMeta = {}) {
   const sortedImages = (row.product_images || [])
     .sort((a, b) => a.display_order - b.display_order);
 
@@ -55,12 +57,30 @@ function shapeProduct(row) {
     }
   });
 
+  const category = row.subcategories?.categories?.slug || row.subcategories?.categories?.name?.toLowerCase() || '';
+  const quantities = (gadgetMeta && Object.keys(gadgetMeta).length > 0)
+    ? gadgetMeta
+    : getCachedGadgetQuantities();
+  const meta = (quantities && quantities[row.id]) || {};
+
+  const minOrderQuantity = (row.min_order_quantity !== undefined && row.min_order_quantity !== null)
+    ? Math.max(1, parseInt(row.min_order_quantity, 10))
+    : (meta.minOrderQuantity ? Math.max(1, parseInt(meta.minOrderQuantity, 10)) : 1);
+
+  const maxOrderQuantity = (row.max_order_quantity !== undefined && row.max_order_quantity !== null)
+    ? parseInt(row.max_order_quantity, 10)
+    : (meta.maxOrderQuantity ? parseInt(meta.maxOrderQuantity, 10) : null);
+
+  const stockQuantity = (row.stock_quantity !== undefined && row.stock_quantity !== null && row.stock_quantity !== '')
+    ? parseInt(row.stock_quantity, 10)
+    : (meta.stockQuantity !== undefined && meta.stockQuantity !== null && meta.stockQuantity !== '' ? parseInt(meta.stockQuantity, 10) : null);
+
   return {
     id: row.id,
     name: row.name,
     brand: row.brand,
     productCode: row.product_code || null,
-    category: row.subcategories?.categories?.slug || row.subcategories?.categories?.name?.toLowerCase() || '',
+    category,
     subcategory: row.subcategories?.slug || row.subcategories?.name?.toLowerCase() || '',
     gender: row.gender || undefined,
     price: row.price,
@@ -70,6 +90,9 @@ function shapeProduct(row) {
     colors: row.colors || [],
     badge: row.badge,
     atmosphere: row.atmosphere_theme || 'default',
+    minOrderQuantity,
+    maxOrderQuantity,
+    stockQuantity,
     images,
     colorImages,  // { 'Black': 1, 'Navy': 2 } — colour → image index
   };
@@ -93,97 +116,200 @@ const LISTING_SELECT = `
 
 // ─── Query Functions (wrapped with React cache for request dedup) ───
 
-export const getProductsByCategory = cache(async (categorySlug) => {
-  const supabase = await createClient();
-  const { data } = await supabase
-    .from('products')
-    .select(LISTING_SELECT)
-    .eq('is_active', true)
-    .eq('subcategories.categories.slug', categorySlug);
+import { 
+  products as staticProducts, 
+  getFashionByGender as getStaticFashionByGender,
+  getGadgetsProducts as getStaticGadgetsProducts,
+  getProductById as getStaticProductById,
+  getFeaturedProducts as getStaticFeaturedProducts,
+  getNewArrivals as getStaticNewArrivals,
+  getProductsByCategory as getStaticProductsByCategory,
+} from '@/data/products';
 
-  // Supabase nested filter doesn't eliminate parent rows, so filter client-side
-  return (data || [])
-    .filter((p) => p.subcategories?.categories?.slug === categorySlug)
-    .map(shapeProduct);
+export const getProductsByCategory = cache(async (categorySlug) => {
+  try {
+    const supabase = await createClient();
+    const gadgetQuantities = await fetchGadgetQuantities();
+    const { data } = await supabase
+      .from('products')
+      .select(LISTING_SELECT)
+      .eq('is_active', true)
+      .eq('subcategories.categories.slug', categorySlug);
+
+    const shaped = (data || [])
+      .filter((p) => p.subcategories?.categories?.slug === categorySlug)
+      .map((p) => shapeProduct(p, gadgetQuantities));
+
+    if (shaped.length > 0) return shaped;
+  } catch (err) {
+    if (err?.digest === 'DYNAMIC_SERVER_USAGE') throw err;
+    console.error('Error in query:', err);
+  }
+  return getStaticProductsByCategory(categorySlug);
 });
 
 export const getProductsBySubcategory = cache(async (categorySlug, subcategorySlug) => {
-  const supabase = await createClient();
-  const { data } = await supabase
-    .from('products')
-    .select(LISTING_SELECT)
-    .eq('is_active', true)
-    .eq('subcategories.slug', subcategorySlug)
-    .eq('subcategories.categories.slug', categorySlug);
+  try {
+    const supabase = await createClient();
+    const gadgetQuantities = await fetchGadgetQuantities();
+    const { data } = await supabase
+      .from('products')
+      .select(LISTING_SELECT)
+      .eq('is_active', true)
+      .eq('subcategories.slug', subcategorySlug)
+      .eq('subcategories.categories.slug', categorySlug);
 
-  // Supabase nested filter doesn't eliminate parent rows, so filter client-side
-  return (data || [])
-    .filter(
-      (p) =>
-        p.subcategories?.categories?.slug === categorySlug &&
-        p.subcategories?.slug === subcategorySlug
-    )
-    .map(shapeProduct);
+    const shaped = (data || [])
+      .filter(
+        (p) =>
+          p.subcategories?.categories?.slug === categorySlug &&
+          p.subcategories?.slug === subcategorySlug
+      )
+      .map((p) => shapeProduct(p, gadgetQuantities));
+
+    if (shaped.length > 0) return shaped;
+  } catch (err) {
+    if (err?.digest === 'DYNAMIC_SERVER_USAGE') throw err;
+    console.error('Error fetching products by subcategory:', err);
+  }
+  return staticProducts.filter(p => p.category === categorySlug && p.subcategory === subcategorySlug);
 });
 
 export const getProductsByGender = cache(async (gender) => {
-  const supabase = await createClient();
-  const { data } = await supabase
-    .from('products')
-    .select(LISTING_SELECT)
-    .eq('is_active', true)
-    .eq('gender', gender);
+  try {
+    const supabase = await createClient();
+    const { data } = await supabase
+      .from('products')
+      .select(LISTING_SELECT)
+      .eq('is_active', true)
+      .or(`gender.eq.${gender},gender.eq.unisex`);
 
-  return (data || []).map(shapeProduct);
+    const shaped = (data || []).map(shapeProduct);
+    if (shaped.length > 0) return shaped;
+  } catch (err) {
+    if (err?.digest === 'DYNAMIC_SERVER_USAGE') throw err;
+    console.error('Error fetching products by gender:', err);
+  }
+  return staticProducts.filter(p => p.gender === gender || p.gender === 'unisex');
+});
+
+export const getFashionByGender = cache(async (gender) => {
+  try {
+    const supabase = await createClient();
+    const { data } = await supabase
+      .from('products')
+      .select(LISTING_SELECT)
+      .eq('is_active', true)
+      .or(`gender.eq.${gender},gender.eq.unisex`);
+
+    const shaped = (data || [])
+      .filter(p => ['clothing', 'footwear', 'accessories'].includes(p.subcategories?.categories?.slug))
+      .map(shapeProduct);
+
+    if (shaped.length > 0) return shaped;
+  } catch (err) {
+    if (err?.digest === 'DYNAMIC_SERVER_USAGE') throw err;
+    console.error('Error fetching fashion by gender:', err);
+  }
+  return getStaticFashionByGender(gender);
+});
+
+export const getGadgetsProducts = cache(async () => {
+  try {
+    const supabase = await createClient();
+    const gadgetQuantities = await fetchGadgetQuantities();
+    const { data } = await supabase
+      .from('products')
+      .select(LISTING_SELECT)
+      .eq('is_active', true)
+      .eq('subcategories.categories.slug', 'gadgets');
+
+    const shaped = (data || [])
+      .filter((p) => p.subcategories?.categories?.slug === 'gadgets')
+      .map((p) => shapeProduct(p, gadgetQuantities));
+
+    if (shaped.length > 0) return shaped;
+  } catch (err) {
+    if (err?.digest === 'DYNAMIC_SERVER_USAGE') throw err;
+    console.error('Error fetching gadgets products:', err);
+  }
+  return getStaticGadgetsProducts();
 });
 
 export const getFootwearByGender = cache(async (gender) => {
-  const supabase = await createClient();
-  const { data } = await supabase
-    .from('products')
-    .select(LISTING_SELECT)
-    .eq('is_active', true)
-    .eq('gender', gender)
-    .eq('subcategories.categories.slug', 'footwear');
+  try {
+    const supabase = await createClient();
+    const { data } = await supabase
+      .from('products')
+      .select(LISTING_SELECT)
+      .eq('is_active', true)
+      .eq('gender', gender)
+      .eq('subcategories.categories.slug', 'footwear');
 
-  // Supabase nested filter doesn't eliminate parent rows, so confirm client-side
-  return (data || [])
-    .filter((p) => p.subcategories?.categories?.slug === 'footwear')
-    .map(shapeProduct);
+    const shaped = (data || [])
+      .filter((p) => p.subcategories?.categories?.slug === 'footwear')
+      .map(shapeProduct);
+
+    if (shaped.length > 0) return shaped;
+  } catch (err) {
+    if (err?.digest === 'DYNAMIC_SERVER_USAGE') throw err;
+    console.error('Error fetching footwear by gender:', err);
+  }
+  return staticProducts.filter(p => p.category === 'footwear' && p.gender === gender);
 });
 
 export const getProductById = cache(async (id) => {
-  const supabase = await createClient();
-  const { data } = await supabase
-    .from('products')
-    .select(PRODUCT_SELECT)
-    .eq('id', id)
-    .single();
+  try {
+    const supabase = await createClient();
+    const gadgetQuantities = await fetchGadgetQuantities();
+    const { data } = await supabase
+      .from('products')
+      .select(PRODUCT_SELECT)
+      .eq('id', id)
+      .single();
 
-  if (!data) return null;
-  return shapeProduct(data);
+    if (data) return shapeProduct(data, gadgetQuantities);
+  } catch (err) {
+    if (err?.digest === 'DYNAMIC_SERVER_USAGE') throw err;
+    console.error('Error fetching product by id:', err);
+  }
+  return getStaticProductById(id) || null;
 });
 
 export const getFeaturedProducts = cache(async () => {
-  const supabase = await createClient();
-  const { data } = await supabase
-    .from('products')
-    .select(LISTING_SELECT)
-    .eq('is_active', true)
-    .in('badge', ['BESTSELLER', 'TRENDING']);
+  try {
+    const supabase = await createClient();
+    const { data } = await supabase
+      .from('products')
+      .select(LISTING_SELECT)
+      .eq('is_active', true)
+      .in('badge', ['BESTSELLER', 'TRENDING']);
 
-  return (data || []).map(shapeProduct);
+    const shaped = (data || []).map(shapeProduct);
+    if (shaped.length > 0) return shaped;
+  } catch (err) {
+    if (err?.digest === 'DYNAMIC_SERVER_USAGE') throw err;
+    console.error('Error fetching featured products:', err);
+  }
+  return getStaticFeaturedProducts();
 });
 
 export const getNewArrivals = cache(async () => {
-  const supabase = await createClient();
-  const { data } = await supabase
-    .from('products')
-    .select(LISTING_SELECT)
-    .eq('is_active', true)
-    .in('badge', ['NEW', 'EXCLUSIVE']);
+  try {
+    const supabase = await createClient();
+    const { data } = await supabase
+      .from('products')
+      .select(LISTING_SELECT)
+      .eq('is_active', true)
+      .in('badge', ['NEW', 'EXCLUSIVE']);
 
-  return (data || []).map(shapeProduct);
+    const shaped = (data || []).map(shapeProduct);
+    if (shaped.length > 0) return shaped;
+  } catch (err) {
+    if (err?.digest === 'DYNAMIC_SERVER_USAGE') throw err;
+    console.error('Error fetching new arrivals:', err);
+  }
+  return getStaticNewArrivals();
 });
 
 export const getRelatedProducts = cache(async (productId, categorySlug, limit = 4) => {

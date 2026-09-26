@@ -9,24 +9,23 @@ import { Analytics } from '@vercel/analytics/next';
 
 // Lazy-load heavy components — still SSR but code-split into separate chunks
 const CartDrawer = dynamic(() => import('@/components/CartDrawer'));
-const VizagIntro = dynamic(() => import('@/components/VizagIntro'));
 
 export const metadata = {
-  title: 'Brand 2 Brand | Premium Multi-Brand E-Commerce Store',
+  title: 'Skplore | Premium Multi-Brand E-Commerce Store',
   description:
-    'Shop the latest premium clothing, footwear, and accessories at Brand 2 Brand. Discover exclusive trends and top-tier styles with nationwide delivery.',
-  keywords: 'Brand 2 Brand, premium fashion, clothing, footwear, accessories, e-commerce, nationwide delivery',
+    'Shop the latest premium clothing, footwear, and accessories at Skplore. Discover exclusive trends and top-tier styles with nationwide delivery.',
+  keywords: 'Skplore, premium fashion, clothing, footwear, accessories, e-commerce, nationwide delivery',
   icons: {
-    icon: '/products/logo/B2blogo.jpg',
-    shortcut: '/products/logo/B2blogo.jpg',
-    apple: '/products/logo/B2blogo.jpg',
+    icon: '/products/logo/skplore-logo.jpg',
+    shortcut: '/products/logo/skplore-logo.jpg',
+    apple: '/products/logo/skplore-logo.jpg',
   },
   openGraph: {
-    title: 'Brand 2 Brand | Premium Multi-Brand E-Commerce Store',
+    title: 'Skplore | Premium Multi-Brand E-Commerce Store',
     description:
-      'Shop the latest premium clothing, footwear, and accessories at Brand 2 Brand. Discover exclusive trends and top-tier styles with nationwide delivery.',
+      'Shop the latest premium clothing, footwear, and accessories at Skplore. Discover exclusive trends and top-tier styles with nationwide delivery.',
     type: 'website',
-    url: 'https://brand2brands.com',
+    url: 'https://YOUR_SKPLORE_DOMAIN.com',
   },
 };
 
@@ -36,11 +35,10 @@ export default function RootLayout({ children }) {
       <body suppressHydrationWarning>
         <CartProvider>
           <AtmosphereProvider>
-            <VizagIntro />
             <Header />
             <CartDrawer />
             <main className="page-content">
-              <h1 className="sr-only">Brand 2 Brand E-Commerce Store</h1>
+              <h1 className="sr-only">Skplore E-Commerce Store</h1>
               {children}
             </main>
             <Footer />

@@ -6,18 +6,16 @@ import Image from 'next/image';
 import gsap from 'gsap/dist/gsap';
 import ProductCard from '@/components/ProductCard';
 import { useAtmosphere } from '@/context/AtmosphereContext';
+import { useCart } from '@/context/CartContext';
+import { getDiscountBannerItems } from '@/lib/discounts';
 
-/* ── Animated Discount Banner ── */
-const BANNER_ITEMS = [
-  { emoji: '🎽', label: 'CLOTHING', pct: '10%', desc: 'Off All Clothing', color: '#C41230' },
-  { emoji: '👟', label: 'FOOTWEAR', pct: '10%', desc: 'Off All Footwear', color: '#B8860B' },
-  { emoji: '💎', label: 'ACCESSORIES', pct: '10%', desc: 'Off All Accessories', color: '#7C3AED' },
-  { emoji: '👜', label: 'BAGS', pct: '15%', desc: 'Off All Bags — Exclusive!', color: '#0D9488' },
-];
-
+/* ── Dynamic Animated Discount Banner ── */
 function DiscountBanner() {
+  const { discountPercentages } = useCart();
+  const bannerItems = getDiscountBannerItems(discountPercentages);
   // Duplicate items so the scroll loops seamlessly
-  const tickers = [...BANNER_ITEMS, ...BANNER_ITEMS, ...BANNER_ITEMS, ...BANNER_ITEMS];
+  const tickers = [...bannerItems, ...bannerItems, ...bannerItems, ...bannerItems];
+
   return (
     <div className="discount-banner" aria-label="Current promotions">
       <div className="discount-banner-label">OFFERS</div>
@@ -121,19 +119,19 @@ export default function HomeClient({ featured, newArrivals }) {
         </div>
 
         <div className="hero-content">
-          <div className="hero-badge">Est. Visakhapatnam</div>
+          <div className="hero-badge">Est. Hyderabad</div>
           <h1>
-            BRAND <span className="hero-2">2</span> BRAND&apos;S
+            SKPLORE
           </h1>
           <p className="hero-subtitle">
-            Vizag&apos;s premier destination for men&apos;s fashion, footwear &amp; luxury accessories
+            Hyderabad&apos;s premier destination for curated fashion for men &amp; women, luxury footwear, and cutting-edge tech gadgets &amp; accessories
           </p>
           <div className="hero-cta-group">
-            <Link href="/clothing" className="btn-magnetic">
-              EXPLORE COLLECTION
+            <Link href="/fashion" className="btn-magnetic">
+              EXPLORE FASHION
             </Link>
-            <Link href="/contact" className="btn-magnetic btn-magnetic--outline" style={{ borderColor: '#fff', color: '#fff' }}>
-              VISIT STORE
+            <Link href="/gadgets" className="btn-magnetic btn-magnetic--outline" style={{ borderColor: '#fff', color: '#fff' }}>
+              EXPLORE GADGETS
             </Link>
           </div>
         </div>
@@ -152,44 +150,38 @@ export default function HomeClient({ featured, newArrivals }) {
       {/* DISCOUNT BANNER */}
       <DiscountBanner />
 
-      {/* ATMOSPHERES */}
+      {/* ATMOSPHERES - 2 WORLDS: FASHION & GADGETS */}
       <section className="atmospheres-section" id="atmospheres">
         <div className="container">
           <h2 className="section-title">EXPLORE OUR WORLDS</h2>
-          <div className="atmospheres-grid">
-            <Link href="/clothing" className="atmosphere-card">
+          <div className="atmospheres-grid atmospheres-grid--two">
+            <Link href="/fashion" className="atmosphere-card">
               <div className="atmosphere-card-bg" style={{
-                backgroundImage: 'url(/images/clothing-atmosphere.png)',
+                backgroundImage: 'url(/images/fashion_atmosphere_v2.jpg)',
                 backgroundSize: 'cover',
                 backgroundPosition: 'center',
               }} />
               <div className="atmosphere-card-overlay" />
               <div className="atmosphere-card-content">
-                <h3 className="atmosphere-card-title">MEN&apos;S CLOTHING</h3>
+                <span className="atmosphere-card-badge">COLLECTION</span>
+                <h3 className="atmosphere-card-title">FASHION</h3>
+                <p className="atmosphere-card-desc">Men &amp; Women · Clothing · Footwear · Luxury Accessories</p>
+                <span className="atmosphere-card-link">ENTER WORLD &rarr;</span>
               </div>
             </Link>
 
-            <Link href="/footwear" className="atmosphere-card">
+            <Link href="/gadgets" className="atmosphere-card">
               <div className="atmosphere-card-bg" style={{
-                backgroundImage: 'url(/images/footwear-atmosphere.png)',
+                backgroundImage: 'url(/images/gadgets_world_v2.jpg)',
                 backgroundSize: 'cover',
                 backgroundPosition: 'center',
               }} />
               <div className="atmosphere-card-overlay" />
               <div className="atmosphere-card-content">
-                <h3 className="atmosphere-card-title">FOOTWEAR HUB</h3>
-              </div>
-            </Link>
-
-            <Link href="/accessories" className="atmosphere-card">
-              <div className="atmosphere-card-bg" style={{
-                backgroundImage: 'url(/images/accessories-atmosphere.png)',
-                backgroundSize: 'cover',
-                backgroundPosition: 'center',
-              }} />
-              <div className="atmosphere-card-overlay" />
-              <div className="atmosphere-card-content">
-                <h3 className="atmosphere-card-title">ACCESSORIES</h3>
+                <span className="atmosphere-card-badge">TECH &amp; GEAR</span>
+                <h3 className="atmosphere-card-title">GADGETS</h3>
+                <p className="atmosphere-card-desc">Phone Cases · Screen Guards · Sound Systems · Smart Gear</p>
+                <span className="atmosphere-card-link">ENTER WORLD &rarr;</span>
               </div>
             </Link>
           </div>
@@ -227,8 +219,8 @@ export default function HomeClient({ featured, newArrivals }) {
             {/* Visual FIRST on all screen sizes */}
             <div className="brand-story-visual" style={{ position: 'relative' }}>
               <Image
-                src="/images/brand_story_visual.png"
-                alt="Brand 2 Brand — Born in the City of Destiny, Visakhapatnam"
+                src="/images/brand_story_v2.jpg"
+                alt="Skplore — Born in the City of Pearls, Hyderabad"
                 fill
                 sizes="(max-width: 768px) 100vw, 50vw"
                 style={{ objectFit: 'cover' }}
@@ -236,21 +228,24 @@ export default function HomeClient({ featured, newArrivals }) {
             </div>
             {/* Content below / on right */}
             <div className="brand-story-content">
-              <h2>BORN IN THE <span className="accent-text">CITY OF DESTINY</span></h2>
+              <h2>BORN IN THE <span className="accent-text">CITY OF PEARLS</span></h2>
               <p>
-                From the vibrant streets of Pedda Waltair to the sun-kissed shores of 
-                RK Beach, Brand Two Brand was born with a mission: to bring world-class 
-                men&apos;s fashion to the heart of Visakhapatnam.
+                From the historic grandeur of the Charminar to the soaring modern pulse of 
+                HITEC City, Skplore was founded with a singular ambition: to create 
+                Hyderabad&apos;s most distinctive destination for modern lifestyle. 
+                We unite high-end fashion for both men and women with next-generation tech gadgets 
+                and premium accessories under one visionary roof.
               </p>
               <p>
-                Every piece in our collection is curated with the same passion that makes 
-                Vizag special—a perfect blend of tradition and modernity, comfort and style. 
-                Whether it&apos;s the perfect floral shirt for a beach evening or a precision 
-                timepiece for a formal gathering, we bring the world&apos;s best to your doorstep.
+                Every garment, pair of shoes, handcrafted accessory, and cutting-edge tech gear 
+                in our collection is curated with the dynamic spirit of Hyderabad—a seamless blend 
+                of timeless elegance, futuristic innovation, and everyday sophistication. 
+                Whether you are refining your personal wardrobe or elevating your digital gear, 
+                Skplore delivers luxury crafted for how you live today.
               </p>
               <div style={{ textAlign: 'center', marginTop: '24px' }}>
                 <a
-                  href="https://www.google.com/maps/search/Brand+Two+Brand+Pedda+Waltair+Visakhapatnam"
+                  href="https://www.google.com/maps/search/Skplore+Hyderabad"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="btn-magnetic"

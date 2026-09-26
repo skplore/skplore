@@ -6,24 +6,28 @@ const nextConfig = {
   // Image optimization — offloaded to browser pre-compression and R2 static serving
   images: {
     unoptimized: true, // Crucial: stops Vercel from using its 1000-image free tier quota
+    qualities: [75, 85],
     imageSizes: [128, 256, 384],
     deviceSizes: [640, 768, 1024, 1280],
     remotePatterns: [
       {
+        // Cloudflare R2 Public Domain
         protocol: 'https',
-        hostname: 'pub-852428233a5149cca229b4639882cad0.r2.dev',
+        hostname: 'pub-147b6454958c46f3bfb564286d54ecf9.r2.dev',
       },
       {
+        // Your Skplore image CDN (set this after creating your Cloudflare R2 bucket)
         protocol: 'https',
-        hostname: 'images.brand2brands.com',
+        hostname: 'images.YOUR_SKPLORE_DOMAIN.com',
       },
       {
         protocol: 'https',
         hostname: 'res.cloudinary.com',
       },
       {
+        // Skplore Supabase project hostname
         protocol: 'https',
-        hostname: 'xpmudrchipnbmvlawsuw.supabase.co',
+        hostname: 'skimedlufkytgemmdhsv.supabase.co',
       },
     ],
   },

@@ -1,5 +1,5 @@
 -- ============================================================
--- Brand 2 Brand — Performance Indexes
+-- Skplore — Performance Indexes
 -- ============================================================
 -- ⚠️  RUN THIS MANUALLY in Supabase SQL Editor (Dashboard → SQL Editor → New Query)
 --     This file cannot be executed by the app — it is a reference migration.

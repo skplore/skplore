@@ -1,5 +1,5 @@
 -- ============================================
--- Brand 2 Brand — Supabase Database Schema
+-- Skplore — Supabase Database Schema
 -- Run this in Supabase SQL Editor
 -- ============================================
 
@@ -36,7 +36,7 @@ CREATE TABLE subcategories (
 CREATE TABLE products (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   name TEXT NOT NULL,
-  brand TEXT DEFAULT 'Brand 2 Brand',
+  brand TEXT DEFAULT 'Skplore',
   subcategory_id UUID NOT NULL REFERENCES subcategories(id) ON DELETE RESTRICT,
   gender TEXT CHECK (gender IN ('men', 'women') OR gender IS NULL),
   price INTEGER NOT NULL,
@@ -46,6 +46,9 @@ CREATE TABLE products (
   colors TEXT[] DEFAULT '{}',
   badge TEXT CHECK (badge IN ('BESTSELLER', 'NEW', 'TRENDING', 'EXCLUSIVE') OR badge IS NULL),
   atmosphere_theme TEXT DEFAULT 'default',
+  min_order_quantity INTEGER DEFAULT 1,
+  max_order_quantity INTEGER DEFAULT NULL,
+  stock_quantity INTEGER DEFAULT NULL,
   is_active BOOLEAN DEFAULT TRUE,
   created_at TIMESTAMPTZ DEFAULT NOW(),
   updated_at TIMESTAMPTZ DEFAULT NOW()

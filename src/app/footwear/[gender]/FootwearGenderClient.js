@@ -13,10 +13,10 @@ export default function FootwearGenderClient({ products, tabs, gender }) {
     setCurrentAtmosphere('footwear');
   }, [setCurrentAtmosphere]);
 
-  // Reset visible count when changing tabs
-  useEffect(() => {
+  const handleTabChange = (key) => {
+    setActiveTab(key);
     setVisibleCount(20);
-  }, [activeTab]);
+  };
 
   const filtered = activeTab === 'all'
     ? products
@@ -45,7 +45,7 @@ export default function FootwearGenderClient({ products, tabs, gender }) {
               <button
                 key={tab.key}
                 className={`category-tab ${activeTab === tab.key ? 'active' : ''}`}
-                onClick={() => setActiveTab(tab.key)}
+                onClick={() => handleTabChange(tab.key)}
               >
                 {tab.label}
               </button>

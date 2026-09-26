@@ -19,19 +19,33 @@ const atmosphereThemes = {
     surface: '#FFFFFF',
     surfaceHover: '#F0F0F0',
   },
-  footwear: {
-    bg: '#F5F5F0',
+  fashion: {
+    bg: '#FAFAFA',
     text: '#1A1A1A',
     accent: '#C41230',
     surface: '#FFFFFF',
-    surfaceHover: '#EEEEE8',
+    surfaceHover: '#F0F0F0',
+  },
+  footwear: {
+    bg: '#FAFAFA',
+    text: '#1A1A1A',
+    accent: '#C41230',
+    surface: '#FFFFFF',
+    surfaceHover: '#F0F0F0',
   },
   accessories: {
-    bg: '#0D0D0D',
-    text: '#FAFAFA',
-    accent: '#B8860B',
-    surface: '#1A1A1A',
-    surfaceHover: '#2A2A2A',
+    bg: '#FAFAFA',
+    text: '#1A1A1A',
+    accent: '#C41230',
+    surface: '#FFFFFF',
+    surfaceHover: '#F0F0F0',
+  },
+  gadgets: {
+    bg: '#FAFAFA',
+    text: '#1A1A1A',
+    accent: '#0D9488',
+    surface: '#FFFFFF',
+    surfaceHover: '#F0F0F0',
   },
 };
 

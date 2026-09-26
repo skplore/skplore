@@ -17,9 +17,8 @@ export default function Header() {
   }, []);
 
   const navLinks = [
-    { href: '/clothing',     label: 'Clothing' },
-    { href: '/footwear',     label: 'Footwear' },
-    { href: '/accessories',  label: 'Accessories' },
+    { href: '/fashion',      label: 'Fashion' },
+    { href: '/gadgets',      label: 'Gadgets' },
     { href: '/contact',      label: 'Contact' },
   ];
 
@@ -29,12 +28,7 @@ export default function Header() {
       {/* ── Row 1: logo + cart ── */}
       <div className="header-inner">
         <Link href="/" className="header-logo" id="brand-logo">
-          <div>
-            <span>BRAND</span>
-            <span className="logo-2">2</span>
-            <span>BRAND&apos;S</span>
-            <span className="logo-sub">Fashion Store</span>
-          </div>
+          <span>SKPLORE</span>
         </Link>
 
         {/* Desktop nav (hidden on mobile) */}

@@ -1,7 +1,7 @@
 import Link from 'next/link';
 
 export const metadata = {
-  title: "404 — Page Not Found | Brand Two Brand's",
+  title: "404 — Page Not Found | Skplore",
   description: 'The page you are looking for does not exist.',
 };
 
@@ -46,7 +46,7 @@ export default function NotFound() {
 
         {/* Floating brand watermark */}
         <div className="not-found-watermark">
-          BRAND<span className="not-found-watermark-2">2</span>BRAND&apos;S
+          SKPLORE
         </div>
       </div>
     </section>

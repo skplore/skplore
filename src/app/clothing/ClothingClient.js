@@ -14,10 +14,10 @@ export default function ClothingClient({ allProducts, tabs }) {
     setCurrentAtmosphere('clothing');
   }, [setCurrentAtmosphere]);
 
-  // Reset visible count when changing tabs
-  useEffect(() => {
+  const handleTabChange = (key) => {
+    setActiveTab(key);
     setVisibleCount(20);
-  }, [activeTab]);
+  };
 
   const products = activeTab === 'all'
     ? allProducts
@@ -29,7 +29,7 @@ export default function ClothingClient({ allProducts, tabs }) {
         <div className="category-hero-bg" style={{ background: '#1A1A1A' }}>
           <Image
             src="/images/clothing_hero.png"
-            alt="Men's Clothing Collection at Brand2Brand Vizag"
+            alt="Men's Clothing Collection at Skplore Hyderabad"
             fill
             priority
             sizes="100vw"
@@ -49,7 +49,7 @@ export default function ClothingClient({ allProducts, tabs }) {
               <button
                 key={tab.key}
                 className={`category-tab ${activeTab === tab.key ? 'active' : ''}`}
-                onClick={() => setActiveTab(tab.key)}
+                onClick={() => handleTabChange(tab.key)}
               >
                 {tab.label}
               </button>
