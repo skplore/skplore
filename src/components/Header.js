@@ -27,7 +27,13 @@ export default function Header() {
 
       {/* ── Row 1: logo + cart ── */}
       <div className="header-inner">
-        <Link href="/" className="header-logo" id="brand-logo">
+        <Link
+          href="/"
+          className="header-logo"
+          id="brand-logo"
+          title="Skplore — Premium Gadgets & Fashion Store in Hyderabad"
+          aria-label="Skplore — Premium Gadgets & Fashion Store in Hyderabad"
+        >
           <span>SKPLORE</span>
         </Link>
 

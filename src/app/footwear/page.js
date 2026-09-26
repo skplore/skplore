@@ -1,49 +1,54 @@
-'use client';
+import FootwearClient from './FootwearClient';
 
-import { useEffect } from 'react';
-import Link from 'next/link';
-import { useAtmosphere } from '@/context/AtmosphereContext';
+const BASE_URL = process.env.NEXT_PUBLIC_STOREFRONT_URL || 'https://skplore.com';
+
+export const metadata = {
+  title: 'Designer Footwear & Luxury Sneakers Hyderabad | Men & Women | Skplore',
+  description:
+    'Discover curated men and women designer sneakers, casual shoes, and athletic footwear in Hyderabad at Skplore Banjara Hills. Same-day local delivery.',
+  keywords: [
+    'footwear Hyderabad',
+    'sneakers Hyderabad',
+    'men footwear Hyderabad',
+    'women sneakers Hyderabad',
+    'designer shoes Banjara Hills',
+    'luxury footwear Hyderabad',
+    'Skplore footwear',
+  ].join(', '),
+  alternates: {
+    canonical: `${BASE_URL}/footwear`,
+  },
+  openGraph: {
+    title: 'Designer Footwear & Luxury Sneakers Hyderabad | Skplore',
+    description:
+      'Curated men and women luxury sneakers, casual shoes, and athletic kicks at Skplore Banjara Hills, Hyderabad.',
+    url: `${BASE_URL}/footwear`,
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Designer Footwear & Luxury Sneakers Hyderabad | Skplore',
+    description:
+      'Curated men and women luxury sneakers, casual shoes, and athletic kicks at Skplore Banjara Hills, Hyderabad.',
+  },
+};
 
 export default function FootwearPage() {
-  const { setCurrentAtmosphere } = useAtmosphere();
-
-  useEffect(() => {
-    setCurrentAtmosphere('footwear');
-  }, [setCurrentAtmosphere]);
+  const collectionSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'CollectionPage',
+    name: 'Designer Footwear & Luxury Sneakers Hyderabad | Skplore',
+    description: 'Curated men and women luxury sneakers and casual footwear in Hyderabad.',
+    url: `${BASE_URL}/footwear`,
+  };
 
   return (
-    <section className="split-hero" id="footwear-hero">
-      <Link href="/footwear/men" className="split-half">
-        <div className="split-half-bg" style={{
-          backgroundImage: 'url(/images/mens-footwear-hero.png)',
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-        }} />
-        <div className="split-half-overlay" />
-        <div className="split-half-content">
-          <h2>SHOP MEN</h2>
-          <p>Casual · Funky · Sports</p>
-          <span className="btn-magnetic" style={{ marginTop: '16px', display: 'inline-block' }}>
-            EXPLORE
-          </span>
-        </div>
-      </Link>
-
-      <Link href="/footwear/women" className="split-half">
-        <div className="split-half-bg" style={{
-          backgroundImage: 'url(/images/womens-footwear-hero.png)',
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-        }} />
-        <div className="split-half-overlay" />
-        <div className="split-half-content">
-          <h2>SHOP WOMEN</h2>
-          <p>Casual · Funky · Sports</p>
-          <span className="btn-magnetic" style={{ marginTop: '16px', display: 'inline-block' }}>
-            EXPLORE
-          </span>
-        </div>
-      </Link>
-    </section>
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(collectionSchema) }}
+      />
+      <FootwearClient />
+    </>
   );
 }

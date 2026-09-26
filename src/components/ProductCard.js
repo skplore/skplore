@@ -88,10 +88,13 @@ export default function ProductCard({ product, hideColorThumbs = false }) {
     const src = images[index];
     const hasFailed = failedImages.has(index);
     if (src && !hasFailed) {
+      const altText = index === 0
+        ? `${product.name} by ${product.brand || 'Skplore'} - Buy in Hyderabad`
+        : `${product.name} - ${product.brand || 'Skplore'} photo ${index + 1}`;
       return (
         <Image
           src={src}
-          alt={`${product.name} - View ${index + 1}`}
+          alt={altText}
           fill
           sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw"
           quality={85}

@@ -303,7 +303,11 @@ export default function ProductDetailClient({ product, relatedProducts }) {
         {src && (
           <Image
             src={src}
-            alt={`${product.name} - View ${index + 1}`}
+            alt={
+              index === 0
+                ? `${product.name} by ${product.brand || 'Skplore'} - Hyderabad Store`
+                : `${product.name} by ${product.brand || 'Skplore'} - Detail View ${index + 1}`
+            }
             fill
             sizes="(max-width: 768px) 100vw, 60vw"
             quality={90}
